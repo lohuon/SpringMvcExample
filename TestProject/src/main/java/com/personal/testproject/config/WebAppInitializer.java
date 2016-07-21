@@ -1,26 +1,30 @@
 package com.personal.testproject.config;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.Filter;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class WebAppInitializer implements WebApplicationInitializer {
-    
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		// TODO Auto-generated method stub
-		
-		AnnotationConfigWebApplicationContext mvcContext = new AnnotationConfigWebApplicationContext();
-		servletContext.addListener(new ContextLoaderListener(mvcContext));
-		mvcContext.register(WebMvcConfig.class);
-		  ServletRegistration.Dynamic dispatcher = servletContext.addServlet(
-		    "dispatcher", new DispatcherServlet(mvcContext));
-		  dispatcher.setLoadOnStartup(1);
-		  dispatcher.addMapping("/");
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] {WebMvcConfig.class};
 	}
+
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class[] {WebMvcConfig.class};
+	}
+
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] {"/"};
+	}
+	
+	@Override 
+	protected Filter[] getServletFilters() { 
+		return new Filter[] {new ResourceUrlEncodingFilter()}; 
+	} 
+	
 }
